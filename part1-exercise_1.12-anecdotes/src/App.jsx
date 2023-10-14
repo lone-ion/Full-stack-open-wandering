@@ -2,9 +2,9 @@ import { useState } from "react";
 
 const Button = (props) => {
   return (
-    <div>
+    <>
       <button onClick={props.handleClick}> {props.text}</button>
-    </div>
+    </>
   );
 };
 
@@ -21,16 +21,53 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState({
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+  });
+
+  const handleVoteClick = () => {
+    const pointsCopy = {
+      ...points,
+    };
+    pointsCopy[selected] += 1;
+    setPoints(pointsCopy);
+  };
+
+  const findMostVotes = () => {
+    let max = 0;
+    let maxKey = 0;
+    for (let key in points) {
+      if (points[key] > max) {
+        max = points[key];
+        maxKey = key;
+      }
+    }
+    return maxKey === 0 ? "--" : anecdotes[maxKey];
+  };
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
+      {anecdotes[selected]}
+      <br />
+      has {points[selected]} votes
+      <br />
       <Button
         handleClick={() =>
           setSelected(Math.floor(Math.random() * anecdotes.length))
         }
         text="click me"
       />
-      {anecdotes[selected]}
+      <Button handleClick={handleVoteClick} text="vote" />
+      <h2>Anecdote with most votes</h2>
+      {findMostVotes()}
     </div>
   );
 };
