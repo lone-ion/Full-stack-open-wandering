@@ -9,11 +9,18 @@ const App = () => {
     const personObject = {
       name: newName,
     };
-    setPersons(persons.concat(personObject));
-    setNewName("");
+
+    const names = persons.map((person) => person.name);
+    const exists = names.indexOf(newName);
+    if (exists === -1) {
+      setPersons(persons.concat(personObject));
+      setNewName("");
+    } else {
+      alert(`${newName} is already added to phonebook`);
+    }
   };
 
-  const handlePersonChange = (event) => {
+  const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
 
@@ -22,7 +29,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
-          name: <input value={newName} onChange={handlePersonChange} />
+          name: <input value={newName} onChange={handleNameChange} />
         </div>
         <div>
           <button type="submit">add</button>
