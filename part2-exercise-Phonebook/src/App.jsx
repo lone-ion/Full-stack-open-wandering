@@ -26,9 +26,13 @@ const App = () => {
     const names = persons.map((person) => person.name);
     const exists = names.indexOf(newName);
     if (exists === -1) {
-      setPersons(persons.concat(personObject));
-      setNewName('');
-      setNewNumber('');
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+          setNewName('');
+          setNewNumber('');
+        });
     } else {
       alert(`${newName} is already added to phonebook`);
     }
