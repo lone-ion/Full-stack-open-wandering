@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
 import Form from './components/Form';
@@ -9,7 +8,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [newFilter, setNewFilter] = useState('');
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -46,13 +45,20 @@ const App = () => {
   };
 
   const handleFilterChange = () => {
-    setNewFilter(event.target.value);
+    setFilter(event.target.value);
+  };
+
+  const handlePersonDeletion = (id, name) => {
+    if (window.confirm(`Delete entry ${name}?`)) {
+      personService.remove(id);
+      setPersons(persons.filter((obj) => obj.id !== id));
+    }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
       <Form
         addPerson={addPerson}
@@ -62,7 +68,11 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons
+        persons={persons}
+        filter={filter}
+        sharePersonDetails={handlePersonDeletion}
+      />
     </div>
   );
 };

@@ -1,15 +1,20 @@
-const Persons = ({ persons, newFilter }) => {
+import Person from './Person';
+
+const Persons = ({ persons, filter, sharePersonDetails }) => {
   return (
     <div>
       <ul>
         {persons
           .filter((person) =>
-            person.name.toLowerCase().includes(newFilter.toLowerCase())
+            person.name.toLowerCase().includes(filter.toLowerCase())
           )
           .map((element) => (
-            <li key={element.name}>
-              {element.name} {element.number}
-            </li>
+            <Person
+              key={element.name}
+              name={element.name}
+              phone={element.number}
+              clickHandler={() => sharePersonDetails(element.id, element.name)}
+            />
           ))}
       </ul>
     </div>
