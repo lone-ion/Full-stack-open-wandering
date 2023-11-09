@@ -32,7 +32,23 @@ const App = () => {
         setNewNumber('');
       });
     } else {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook,replace the old number with a new one?`
+        )
+      );
+      const matchedNameaArrIndex = exists;
+      const objId = persons[matchedNameaArrIndex].id;
+      const changedPersonObject = { ...personObject, number: newNumber };
+      personService
+        .update(objId, changedPersonObject)
+        .then((returnedPerson) => {
+          setPersons(
+            persons.filter((obj) => obj.id !== objId).concat(returnedPerson)
+          );
+          setNewName('');
+          setNewNumber('');
+        });
     }
   };
 
