@@ -2,7 +2,7 @@ const Person = ({ name, phone, clickHandler }) => {
   const label = 'delete';
 
   return (
-    <li>
+    <li className='person'>
       {name} {phone}
       <button onClick={clickHandler}>{label}</button>
     </li>
