@@ -39,15 +39,23 @@ const App = () => {
     const names = persons.map((person) => person.name);
     const exists = names.indexOf(newName);
     if (exists === -1) {
-      personService.create(personObject).then((returnedPerson) => {
-        setInfoMessage(`Added ${returnedPerson.name}`);
-        setTimeout(() => {
-          setInfoMessage(null);
-        }, 5000);
-        setPersons(persons.concat(returnedPerson));
-        setNewName('');
-        setNewNumber('');
-      });
+      personService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setInfoMessage(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setInfoMessage(null);
+          }, 5000);
+          setPersons(persons.concat(returnedPerson));
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch((error) => {
+          setErrorMessage(`${error.response.data.error}`);
+          setTimeout(() => {
+            setInfoMessage(null);
+          }, 5000);
+        });
     } else {
       if (
         window.confirm(
