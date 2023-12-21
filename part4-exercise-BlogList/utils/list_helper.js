@@ -8,15 +8,24 @@ const totalLikes = (blogs) => {
 
   console.table(array);
 
-  const aggregator = (sum, item) => {
-    return sum + item
+  const accumulator = (acc, item) => {
+    return acc + item
   }
 
-  return array.reduce(aggregator, 0) 
+  return array.reduce(accumulator, 0) 
+}
+
+const favoriteBlog = (blogs) => {
+  const accumulator = (acc, item) => {
+    return acc.likes > item.likes ? acc : item
+  }
+
+  return blogs.reduce(accumulator, {})
 }
 
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favoriteBlog
 }
 
