@@ -4,6 +4,30 @@ const app = require('../app')
 
 const api = supertest(app)
 
+const Blog = require('../models/blog')
+const initialBlogs = [
+  {
+    title: "Super easy programming tools",
+    author: "Mia Lasa",
+    url: "www.searchTech.test",
+    likes: 55
+  },
+  {
+    title: "There is something out there",
+    author: "Pietr Blachos",
+    url: "www.theUnknown.test",
+    likes: 307
+  },
+]
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  let blogObject = new Blog(initialBlogs[0])
+  await blogObject.save()
+  blogObject = new Blog(initialBlogs[1])
+  await blogObject.save()
+})
+
 test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
@@ -23,6 +47,30 @@ test('unique identifier property\'s name is id', async () => {
   response.body.forEach(element => {
     expect(element.id).toBeDefined()
   })
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: "Ai is waiting",
+    author: "Teresa Geoth",
+    url: "www.futuristic.de",
+    likes: 39
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const contents = response.body.map(r => r.title)
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(contents).toContain(
+    'Ai is waiting'
+  )
 })
 
 afterAll(async () => {
