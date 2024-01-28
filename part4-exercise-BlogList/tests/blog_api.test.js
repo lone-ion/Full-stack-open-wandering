@@ -73,6 +73,20 @@ test('a valid blog can be added', async () => {
   )
 })
 
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await api.get('/api/blogs')
+
+  const blogToDelete = blogsAtStart.body[1]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  blogsAtEnd = await api.get('/api/blogs')
+
+  expect(blogsAtEnd.body).toHaveLength(blogsAtStart.body.length - 1)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
